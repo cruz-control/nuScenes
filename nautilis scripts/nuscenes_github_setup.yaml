@@ -1,0 +1,41 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jonathan-github-setup
+spec:
+  template:
+    spec:
+      containers:
+      - name: jonathan-github-setup
+        image: ubuntu
+        command:
+        - sh
+        - -c
+        - "apt-get update && apt-get --assume-yes install git && cd /pvcvolume && git clone https://github.com/Slugbotics/cruz-control"
+        volumeMounts:
+        - name: pvcvolume
+          mountPath: /pvcvolume
+        resources:
+          limits:
+            memory: 1Gi
+            cpu: "1"
+          requests:
+            memory: 1Gi
+            cpu: "1"
+      # Need to use affinity nautilus.io/linstor
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: nautilus.io/linstor
+                operator: In
+                values:
+                - "true"
+      volumes:
+      - name: pvcvolume
+        persistentVolumeClaim:
+          claimName: jonathan-nuscenes-linstor
+      restartPolicy: Never
+  backoffLimit: 1
+

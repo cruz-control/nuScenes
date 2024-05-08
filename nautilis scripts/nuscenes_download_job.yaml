@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: jonathan-download-nuscenes
+spec:
+  template:
+    spec:
+      containers:
+      - name: jonathan-download-nuscenes
+        image: ubuntu
+        command:
+        - sh
+        - -c
+        - "cd /pvcvolume/cruz-control/nuscenes && apt-get update && apt-get --assume-yes install git python3 python3-pip && git pull && pip3 install requests && pip3 install tqdm && python3 download_nuscenes.py 'eyJraWQiOiJaUk14Z2gwZHg0UnRGVGR1VlhpZm9pa2U0bVJGaVlKN1lmMmVZSUxUblpZPSIsImFsZyI6IlJTMjU2In0.eyJjdXN0b206bmV3c19sZXR0ZXIiOiIxIiwiY3VzdG9tOmNvdW50cnkiOiJVbml0ZWQgU3RhdGVzIiwic3ViIjoiNDlmMzdjODQtZDM1NC00NTczLTliOTEtNGFmNDY5YWM1MzU2IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC51cy1lYXN0LTEuYW1hem9uYXdzLmNvbVwvdXMtZWFzdC0xX0c1NWVQenVzcCIsImNvZ25pdG86dXNlcm5hbWUiOiI0OWYzN2M4NC1kMzU0LTQ1NzMtOWI5MS00YWY0NjlhYzUzNTYiLCJnaXZlbl9uYW1lIjoiSm9uYXRoYW4iLCJjdXN0b206Y29tcGFueSI6IlVDIFNhbnRhIENydXoiLCJhdWQiOiI3ZnE1anZzNWZmczFjNTBoZDN0b29iYjNiOSIsImV2ZW50X2lkIjoiODc4Y2Q5YmItMzVkYi00ZjA2LWIwZDAtY2U2NDEyZjdjYTQyIiwidG9rZW5fdXNlIjoiaWQiLCJhdXRoX3RpbWUiOjE3MTA4MTQ0OTcsImV4cCI6MTcxMDgxODA5NywiaWF0IjoxNzEwODE0NDk3LCJmYW1pbHlfbmFtZSI6Ik1vcnJpcyIsImVtYWlsIjoiam93ZW1vcnJAdWNzYy5lZHUifQ.awHLk5_fyi369IQlCqn8mWq1Ia46cZtFOFKPRUsrKcCKDa5riApgW7sRUK7SOzEg9wEf9PjvRVqlsNV6ySBmNLC6OyYjS7n0u709qAG7g6mrP_F94toQ7txqIdYDezeZHXwDvjXL2x5I8LM89JoHvODxuIW69x4Hake08PY9IH3EtbZmiBcM3VwhtHnzrpWp6_29QfNWAcP-1jYn3fA-PRulCmYKQ7oyCb_XOwLPBHV_0xtPtY4Dexlv5trRzFFrQfDhG6YsyNktYjwjxmhDT1193JZwOpOuO5BfKCs0GHniK-498rbxsORtK0KbKBP4ouqLLMQAjVAz2j5Avqh-Pg'"
+        volumeMounts:
+        - name: pvcvolume
+          mountPath: /pvcvolume
+        resources:
+          limits:
+            memory: 10Gi
+            cpu: "10"
+          requests:
+            memory: 1Gi
+            cpu: "1"
+      volumes:
+      - name: pvcvolume
+        persistentVolumeClaim:
+          claimName: jonathan-nuscenes
+      restartPolicy: Never
+  backoffLimit: 1
