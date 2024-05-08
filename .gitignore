@@ -1,3 +1,11 @@
+# Project Specific
+
+*.tgz
+*.tar.gz
+*.tar.xz
+*.tar.bz2
+
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
